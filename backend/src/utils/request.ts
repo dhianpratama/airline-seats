@@ -1,4 +1,8 @@
+import * as httpStatus from "http-status";
+import * as jwt from "jsonwebtoken";
 import { Observable } from "rxjs";
+import { JWT_SECRET_KEY } from "../constants/auth";
+import { createHttpError } from "./response";
 
 export const getBody = (request$: Observable<any>) => {
     return request$
@@ -41,8 +45,26 @@ export const getAllParams = (request$: Observable<any>) => {
 };
 
 export const authorizedToken = (request$: Observable<any>) => {
-    // Always return true, there is no authorization yet.
-    return Observable.of({});
+    return request$
+    .switchMap((it) => {
+        const authorizationHeader = it.request.header.authorization;
+        if (!authorizationHeader) {
+            throw createHttpError("Unauthorized", httpStatus.UNAUTHORIZED);
+        }
+        const isBearer = authorizationHeader.slice(0, 7) === "Bearer ";
+        if (!isBearer) {
+            throw createHttpError("Invalid authorization method", httpStatus.UNAUTHORIZED);
+        }
+        const token = authorizationHeader.replace("Bearer ", "");
+        let user;
+        try {
+            user = jwt.verify(token, JWT_SECRET_KEY);
+        } catch (error) {
+            throw createHttpError("Unauthorized", httpStatus.UNAUTHORIZED);
+        }
+        it.request.user = user;
+        return Observable.of(user);
+    });
 };
 
 export const getSessionUser = (request$: Observable<any>): Observable<any> => {

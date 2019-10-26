@@ -5,7 +5,7 @@ import queueService from "../../services/queue_service";
 import seatRequestService from "../../services/seat_request_service";
 import { BaseHandler, Database } from "../base/base_handler";
 
-interface IBookSeatParams extends IListParams {
+interface IBookSeatParams {
   username: string;
   flight_id: string;
 }

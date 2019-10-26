@@ -51,7 +51,7 @@
       true,
       "always"
     ],
-    "space-before-function-parent": true,
+    "space-before-function-paren": true,
     "typedef-whitespace": [
       true,
       {
