@@ -5,8 +5,8 @@ import flightService from "../../services/flight_service";
 import { BaseHandler, Database } from "../base/base_handler";
 
 interface ICreateFlightParams extends IListParams {
-  name: string;
-  input_data: [number[]];
+    code: string;
+    input_data: [number[]];
 }
 
 const createFlightHandler = (requestObservable: Observable<Request>) => {
@@ -15,10 +15,8 @@ const createFlightHandler = (requestObservable: Observable<Request>) => {
     .withLogic((data: IParamsAndUserSession<ICreateFlightParams>) => {
       const { params } = data;
 
-      return flightService.generateAllSeats(params.input_data)
-        .map((flightSeats: IFlightSeatModel[]) => ({ flightSeats }));
+      return flightService.createFlight(params);
     })
-    .withResponseData()
     .process();
 };
 

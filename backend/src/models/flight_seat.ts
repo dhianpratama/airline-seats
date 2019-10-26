@@ -33,4 +33,14 @@ const schema = new BaseSchema(
   },
 );
 
+schema.set("toJSON", {
+    transform(_, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        ret.seat_name = `${ret.position.row}${ret.position.column}`;
+        ret.is_occupied = ret.occupied_by !== undefined && ret.occupied_by !== null && ret.occupied_by !== "";
+    },
+});
+
 export const FlightSeat: Model<IFlightSeatModel> = model<IFlightSeatModel>("FlightSeat", schema);

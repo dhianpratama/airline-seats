@@ -3,7 +3,7 @@ import { DEFAULT_TIMESTAMPS_CONFIG } from "../constants/mongoose";
 import { BaseSchema } from "./base/base_schema";
 
 export interface IFlight {
-  name: string;
+  code: string;
   input_data: [number[]];
 }
 
@@ -11,7 +11,7 @@ export interface IFlightModel extends IFlight, Document {}
 
 const schema = new BaseSchema(
   {
-    name: { type: String, required: true },
+    code: { type: String, required: true },
     input_data: [{ type: Schema.Types.Mixed }],
   },
   {
