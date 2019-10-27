@@ -9,9 +9,11 @@ import { getSeatRequestHandler } from "./handlers/flight/get_seat_request_detail
 import { listFlightHandler } from "./handlers/flight/list_flight_handler";
 import { listFlightSeatHandler } from "./handlers/flight/list_flight_seat_handler";
 import { livenessHandler } from "./handlers/healthcheck/liveness_handler";
+import { indexHandler } from "./handlers/index_handler";
 
 const router = new RxRouter();
 
+router.get("/", indexHandler);
 router.get("/liveness", livenessHandler);
 
 // For guest - without Auth
