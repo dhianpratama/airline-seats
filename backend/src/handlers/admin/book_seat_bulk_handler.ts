@@ -28,7 +28,7 @@ const bookSeatsInBulkHandler = (requestObservable: Observable<Request>) => {
         .withLogic((data: IParamsAndUserSession<IBookSeatsInBulkParams>) => {
             const { params } = data;
             if (!params.passengers || params.passengers.length === 0) {
-                throw createHttpError("Passengers are required", httpStatus.BAD_REQUEST);
+                throw createHttpError("Passengers is required", httpStatus.BAD_REQUEST);
             }
             return seatRequestService.saveSeatRequest(params.passengers, params.flight_id)
                 .mergeMap((seatRequest: ISeatRequestModel) => queueService.publishToQueue(seatRequest._id.toString()), (seatRequest: ISeatRequestModel) => seatRequest)

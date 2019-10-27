@@ -16,7 +16,8 @@ class FlightService {
         const flight = new Flight(data);
         return Observable.fromPromise(flight.save())
             .switchMap((flight: IFlightModel) => this.generateAllSeats(flight))
-            .switchMap((flightSeats: IFlightSeatModel[]) => this.saveSeats(flightSeats));
+            .switchMap((flightSeats: IFlightSeatModel[]) => this.saveSeats(flightSeats))
+            .map(() => flight);
     }
 
     public listFlightSeat = (flightId: string | Schema.Types.ObjectId): Observable<IFlightSeatModel[]> => {
@@ -33,19 +34,32 @@ class FlightService {
             .switchMap(() => this.findAvailableSeat(flightId))
             .switchMap((data: any) => data.available === true
                 ? this.occupySeatWithUsername(data.flightSeat, passengerName)
-                : Observable.of({}),
+                : Observable.of(undefined),
             );
     }
 
+    public clearFlightSeatById = (flightSeatId: string | Schema.Types.ObjectId) => {
+        return Observable.fromPromise(FlightSeat.findById(flightSeatId))
+            .do((flightSeat: IFlightSeatModel) => {
+                if (!flightSeat) {
+                    throw createHttpError("Seat not found", httpStatus.NOT_FOUND);
+                }
+            })
+            .switchMap((flightSeat: IFlightSeatModel) => {
+                flightSeat.occupied_by = undefined;
+                return Observable.fromPromise(flightSeat.save());
+            });
+    }
+
     private generateAllSeats = (flight: IFlightModel): Observable<IFlightSeatModel[]> => {
-        const { input_data: inputData } = flight;
+        const { seat_map: seatMap } = flight;
         const seats: IFlightSeatModel[] = [];
         let currentColumn = 0;
-        inputData.forEach((section: number[], idxSection: number) => {
+        seatMap.forEach((section: number[], idxSection: number) => {
             const [ totalRows, totalColumns ] = section;
             let sectionPosition;
             if (idxSection === 0) { sectionPosition = "left"; }
-            else if (idxSection === inputData.length - 1) { sectionPosition = "right"; }
+            else if (idxSection === seatMap.length - 1) { sectionPosition = "right"; }
             else { sectionPosition = "middle"; }
 
             for (let r = 1; r <= totalRows; r++) {

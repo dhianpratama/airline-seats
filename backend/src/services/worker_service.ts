@@ -19,7 +19,6 @@ class WorkerService {
         });
 
         worker.on("message", (message, next, id): void => {
-            // process your message
             console.log("Message id : " + id);
             console.log("Message content: ", message);
             const seatRequestId = message;
@@ -40,13 +39,16 @@ class WorkerService {
                     throw new Error("Seat request not found");
                 }
             })
-            .switchMap((seatRequest: ISeatRequestModel) => this.bookSeatPassengers(seatRequest));
+            .mergeMap((seatRequest: ISeatRequestModel) => this.bookSeatPassengers(seatRequest), (seatRequest: ISeatRequestModel) => seatRequest)
+            .switchMap((seatRequest: ISeatRequestModel) => this.updateSeatRequestToCompleted(seatRequest));
     }
 
     public bookSeatPassengers = (seatRequest: ISeatRequestModel, idx: number = 0) => {
         const passenger = seatRequest.passengers[idx];
         return flightService.bookSeat(seatRequest.flight, passenger)
-            .switchMap((flightSeat: IFlightSeatModel) => this.saveBookPassengerResult(seatRequest, flightSeat, passenger))
+            .switchMap((flightSeat: IFlightSeatModel) => flightSeat
+                ? this.saveBookPassengerResult(seatRequest, flightSeat, passenger)
+                : Observable.of(seatRequest))
             .switchMap((updatedSeatRequest: ISeatRequestModel) => idx < seatRequest.passengers.length - 1
                 ? this.bookSeatPassengers(updatedSeatRequest, idx + 1)
                 : Observable.of({}));
@@ -70,6 +72,11 @@ class WorkerService {
             seatRequest.result = [ result ];
         }
 
+        return Observable.fromPromise(seatRequest.save());
+    }
+
+    private updateSeatRequestToCompleted = (seatRequest: ISeatRequestModel): Observable<ISeatRequestModel> => {
+        seatRequest.status = "completed";
         return Observable.fromPromise(seatRequest.save());
     }
 }

@@ -13,6 +13,7 @@ export interface ISeatRequest {
         is_success: boolean;
         error_message?: string;
     }];
+    status: "waiting" | "completed";
 }
 
 export interface ISeatRequestModel extends ISeatRequest, Document {}
@@ -28,6 +29,7 @@ const schema = new BaseSchema(
         is_success: { type: Boolean, default: false },
         error_message: { type: String },
     }],
+    status: { type: String, default: "waiting" },
   },
   {
     timestamps: DEFAULT_TIMESTAMPS_CONFIG,
