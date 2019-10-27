@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { SeatTypes } from "../constants/seat_types";
 import { Flight, IFlight, IFlightModel } from "../models/flight";
 import { FlightSeat, IFlightSeatModel } from "../models/flight_seat";
+import { SeatRequest } from "../models/seat_request";
 import { createHttpError } from "../utils/response";
 
 class FlightService {
@@ -49,6 +50,14 @@ class FlightService {
                 flightSeat.occupied_by = undefined;
                 return Observable.fromPromise(flightSeat.save());
             });
+    }
+
+    public deleteFlight = (flightId: string | Schema.Types.ObjectId) => {
+        return Observable.zip(
+            Observable.fromPromise(Flight.remove({ _id: flightId }).exec()),
+            Observable.fromPromise(FlightSeat.remove({ flight: flightId }).exec()),
+            Observable.fromPromise(SeatRequest.remove({ flight: flightId }).exec()),
+        );
     }
 
     private generateAllSeats = (flight: IFlightModel): Observable<IFlightSeatModel[]> => {

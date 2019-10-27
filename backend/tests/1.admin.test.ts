@@ -6,7 +6,7 @@ import "mocha";
 const BASE_API_URL = process.env.BASE_API_URL || "http://localhost:8080";
 const FLIGHT_NUMBER = "GA-919";
 const SEAT_MAP = [ [2, 3], [3, 4], [3, 2], [4, 3] ];
-const TOTAL_PASSENGERS = 30;
+const TOTAL_PASSENGERS = 50;
 const PASSENGERS = [];
 for (let i = 1; i <= TOTAL_PASSENGERS; i++) {
     PASSENGERS.push(`Passenger-${i}`);
@@ -17,7 +17,7 @@ let FLIGHT_ID;
 let REQUEST_ID;
 
 describe("Running Test for ADMIN user", function () {
-    this.timeout(60 * 1000);
+    this.timeout(3 * 60 * 1000);
 
     describe("Login", function () {
         it("should throw error if password is not given", (done) => {
@@ -187,7 +187,7 @@ describe("Running Test for ADMIN user", function () {
                     done();
                 });
         });
-        it(`should process successfully with ${TOTAL_PASSENGERS} and will get request_id`, (done) => {
+        it(`should process successfully with ${TOTAL_PASSENGERS} passengers`, (done) => {
             const options = {
                 method: "POST",
                 url: `${BASE_API_URL}/admin/flights/${FLIGHT_ID}/seats/book/bulk`,
@@ -204,7 +204,7 @@ describe("Running Test for ADMIN user", function () {
                     expect(status).to.equal("success");
                     expect(data).to.have.property("request_id");
                     REQUEST_ID = data.request_id;
-                    console.log("REQEUST ID ", REQUEST_ID);
+                    console.log("REQUEST ID ", REQUEST_ID);
                     done();
                 })
                 .catch((error) => done(error));
@@ -240,6 +240,22 @@ describe("Running Test for ADMIN user", function () {
                 });
                 done();
             });
+        });
+        it("should delete all data related to this flight", (done) => {
+            const options = {
+                method: "DELETE",
+                url: `${BASE_API_URL}/admin/flights/${FLIGHT_ID}`,
+                headers: {
+                    Authorization: `Bearer ${AUTH_TOKEN}`,
+                },
+            };
+            axios(options)
+                .then((response) => {
+                    const { status } = response.data;
+                    expect(status).to.equal("success");
+                    done();
+                })
+                .catch((error) => done(error));
         });
     });
 });

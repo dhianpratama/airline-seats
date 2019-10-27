@@ -46,9 +46,7 @@ class WorkerService {
     public bookSeatPassengers = (seatRequest: ISeatRequestModel, idx: number = 0) => {
         const passenger = seatRequest.passengers[idx];
         return flightService.bookSeat(seatRequest.flight, passenger)
-            .switchMap((flightSeat: IFlightSeatModel) => flightSeat
-                ? this.saveBookPassengerResult(seatRequest, flightSeat, passenger)
-                : Observable.of(seatRequest))
+            .switchMap((flightSeat: IFlightSeatModel) => this.saveBookPassengerResult(seatRequest, flightSeat, passenger))
             .switchMap((updatedSeatRequest: ISeatRequestModel) => idx < seatRequest.passengers.length - 1
                 ? this.bookSeatPassengers(updatedSeatRequest, idx + 1)
                 : Observable.of({}));
