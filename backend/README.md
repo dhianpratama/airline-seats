@@ -210,6 +210,7 @@ Response 200
 ```
 
 ### 3. `POST /flights/<flight_id>/seats/book`
+Book seat for a guest
 ```
 Request Body
 {
