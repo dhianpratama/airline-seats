@@ -21,12 +21,12 @@ router.get("/flights", listFlightHandler);
 router.get("/flights/:flight_id/seats", listFlightSeatHandler);
 router.post("/flights/:flight_id/seats/book", bookSeatHandler);
 router.get("/flights/seats/requests/:request_id", getSeatRequestHandler);
-router.delete("/flights/seats/:flight_seat_id", clearSeatByIdHandler);
 
 // For admin - with Auth
 router.post("/admin/login", loginAdminHandler);
 router.post("/admin/flights/:flight_id/seats/book/bulk", bookSeatsInBulkHandler);
 router.delete("/admin/flights/:flight_id", deleteFlightHandler);
 router.post("/admin/flights", createFlightHandler);
+router.delete("/admin/flights/seats/:flight_seat_id", clearSeatByIdHandler);
 
 export { router };
