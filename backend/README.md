@@ -141,7 +141,7 @@ Response 200
 ### 1. `GET /flights`
 List flights
 ```
-
+Response 200
 {
     "status": "success",
     "data": {
@@ -214,6 +214,15 @@ Response 200
 Request Body
 {
 	"username": "The Rock Johnson"
+}
+```
+```
+Response 200
+{
+    "status": "success",
+    "data": {
+        "request_id": "5db60e57c03a6b3fec61229c"
+    }
 }
 ```
 
