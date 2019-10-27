@@ -1,21 +1,44 @@
-Smart Online Indicator
+Airline Seats Placement
 ============
 
-A microservice based for user online indicator. Features included
-- Real time status update
-- Last online status
+HTTP API to server auto generated seats placement based on this rules
+```
+RULES FOR SEATING:
+=> Always seat passengers starting from the front row to back, starting from the left to the right
+=> Fill aisle seats first followed by window seats followed by center seats (any order in center seats)
+
+INPUT:
+=> a 2D array that represents the rows and columns e.g: [[3,4], [4,5], [2,3], [3,4]]
+=> The number of passengers waiting in the queue.
+```
 
 
 ## How to run server
+### Production (recommended)
 ```
 docker-compose build
 docker-compose up -d
 ```
+### Development
+```
+PREREQUISITES
+=> Mongodb running and accessible on localhost:27017
+=> Redis running and accessible on localhost:6379
+
+cd backend
+npm install
+npm run start
+```
+
+## How to run test
+Assume the app is already running at localhost:8080
+```
+npm run test
+```
 
 ## Design Flow
 
-![Image of Design Flow]
-(https://github.com/dhianpratama/smart-online-indicator/blob/master/diagrams/Online%20Indicator%20using%20MQTT.png?raw=true)
+![Alt Text](https://raw.githubusercontent.com/dhianpratama/smart-online-indicator/master/diagrams/Online%20Indicator%20using%20MQTT.png)
 
 ## Environment Variables
 All environment variables that is currently set can be seen in `docker-compose.yml`

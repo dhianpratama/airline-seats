@@ -1,0 +1,87 @@
+@startuml
+
+title Airline Seats Placement
+
+autonumber
+actor ADMIN
+participant BACKEND
+participant MONGODB
+participant "REDIS-QUEUE"
+actor GUEST
+
+== Prepare Data By Admin ===
+ADMIN -> BACKEND: Login
+note left
+POST /admin/login
+end note
+BACKEND -> ADMIN: Response 200 auth token
+ADMIN -> BACKEND: Create flight
+note left
+POST /admin/flights
+end note
+BACKEND -> BACKEND: Generate seats based on input
+BACKEND -> MONGODB: Save "flight" data
+BACKEND -> MONGODB: Save "flight_seat" data
+BACKEND -> ADMIN: Response 200 flight data
+
+== Book Seats By Admin ==
+ADMIN -> BACKEND: Book seats in bulk
+note left
+POST /admin/flights/:flight_id/seats/book/bulk
+end note
+BACKEND -> MONGODB: Save "seat_request" data
+note left
+status: "waiting"
+end note
+BACKEND -> "REDIS-QUEUE": Push request_id to queue
+BACKEND -> ADMIN: Response 200 request_id
+
+== Book Seat By Guest ==
+GUEST -> BACKEND: Book seat
+note left
+POST /flights/:flight_id/seats/book
+end note
+BACKEND -> MONGODB: Save "seat_request" data
+note left
+status: "waiting"
+end note
+BACKEND -> "REDIS-QUEUE": Push request_id to queue
+BACKEND -> GUEST: Response 200 request_id
+
+== Worker Processing Seat Request ==
+"REDIS-QUEUE" -> BACKEND: Receive request_id from queue
+BACKEND -> MONGODB: Get "seat_reqeust" detail by request_id
+BACKEND -> BACKEND: Get passenger name
+BACKEND -> MONGODB: Find available seats based on rules
+BACKEND -> MONGODB: Update seat data 
+note left
+if seat found update data to "flight_seat" as occupied
+Update result to "seat_request"
+end note
+BACKEND -> BACKEND: Choice?
+note left
+If still has more passenger within the same "seat_request", back to step 18
+Else next process
+end note
+BACKEND -> MONGODB: Update "seat_request"
+note right
+status: "completed"
+end note
+
+== Admin and Guest Pooling for Seat Request Result ==
+ADMIN -> BACKEND: Get seat_request detail
+BACKEND -> ADMIN: Response 200
+note left
+GET /flights/seats/requests/:requesr_id
+If status === "waiting" -> retry to call api
+If status === "completed -> will get the seat_number in the data"
+end note
+GUEST -> BACKEND: Get seat_request detail
+BACKEND -> GUEST: Response 200
+note left
+GET /flights/seats/requests/:requesr_id
+If status === "waiting" -> retry to call api
+If status === "completed -> will get the seat_number in the data"
+end note
+
+@enduml
