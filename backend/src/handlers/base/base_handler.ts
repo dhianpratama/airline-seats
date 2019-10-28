@@ -2,7 +2,7 @@ import * as httpStatus from "http-status";
 import { Observable } from "rxjs";
 import { IRequestData, IValidationItem } from "../../interfaces/common";
 import { connectMongoDB } from "../../utils/connect_mongodb";
-import { authorizedToken, getAllParams } from "../../utils/request";
+import { authorizedToken, getAllParams, getSessionUser } from "../../utils/request";
 import { createHttpError, sendErrorResponse, sendJsendResponse } from "../../utils/response";
 
 export enum Database {
@@ -84,6 +84,19 @@ export class BaseHandler<T> {
                 return Observable.zip(...observables);
             })
             .switchMap(() => getAllParams(this.request$))
+            .switchMap((data: any) => {
+                const { params, headers } = data;
+                return !this.useAuthorization
+                  ? Observable.of({ params, headers })
+                  : getSessionUser(this.request$)
+                      .switchMap((userSession: any) => {
+                        return Observable.of({
+                          params,
+                          userSession,
+                          headers,
+                        });
+                      });
+              })
             .switchMap((data: IRequestData<T>) => {
                 const { params } = data;
 

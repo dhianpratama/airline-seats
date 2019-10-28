@@ -29,7 +29,7 @@ const loginAdminHandler = (requestObservable$: Observable<Request>) => {
 
             if (params.username === "admin" && params.password === "pass1234") {
                 const token = jwt.sign(DUMMY_ADMIN_USER, JWT_SECRET_KEY);
-                return Observable.of({ token });
+                return Observable.of({ ...DUMMY_ADMIN_USER, token });
             } else {
                 throw createHttpError("Invalid username or password", httpStatus.UNAUTHORIZED);
             }

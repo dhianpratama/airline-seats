@@ -12,18 +12,11 @@
                     pageTitle: 'Home'
                 }
             }, {
-                name: 'albums',
-                url: '/albums',
-                template: '<albums></albums>',
+                name: 'admin',
+                url: '/admin',
+                template: '<admin></admin>',
                 data: {
-                    pageTitle: 'Albums'
-                }
-            }, {
-                name: 'posts',
-                url: '/posts',
-                template: '<posts></posts>',
-                data: {
-                    pageTitle: 'Posts'
+                    pageTitle: 'Admin'
                 }
             }];
             states.forEach(state => {

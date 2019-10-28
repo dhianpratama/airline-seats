@@ -25,9 +25,9 @@
                 options.data = data;
             }
             if (auth) {
-                const token = $window.localStorage.getItem("authToken")
+                const user = JSON.parse($window.localStorage.getItem("user"))
                 options.headers = {
-                    "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${user.token}`
                 }
             }
             return options;

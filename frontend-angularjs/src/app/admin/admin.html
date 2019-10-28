@@ -1,6 +1,17 @@
-<div class="container guest">
-    <div class="row flight-selection">
-        <h2>Guest Page</h2>
+<div class="container admin">
+    <div class="row" ng-show="!vm.data.isAuthenticated">
+        <h2>Please Login</h2>
+        <input type="text" class="form-control" placeholder="Username" ng-model="vm.data.username">
+        <input type="password" class="form-control" placeholder="Password" ng-model="vm.data.password">
+        <div style="height: 10px;"></div>
+        <button ng-click="vm.actions.login()" style="width: 100%;"
+                    class="btn btn-primary">Login</button>
+    </div>
+    <div class="flight-selection" ng-show="vm.data.isAuthenticated">
+        <div><h2>Admin Page</h2></div>
+        <div>
+            <p>You can view a flight detail</p>
+        </div>
         <div class="input-group">
             <select ng-options="flight as flight.flight_number for flight in vm.data.flights track by flight.id" 
                 ng-model="vm.data.selectedFlight"
@@ -12,9 +23,28 @@
                     class="btn btn-primary">View Flight Detail</button>
             </div>
         </div>
+        <div style="height: 20px;"></div>
+        OR
+        <div style="height: 20px;"></div>
+        <div>
+            <p>Create a new flight</p>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Flight number</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Sizing example input" ng-model="vm.data.flightNumber">
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Seat Map</span>
+            </div>
+            <textarea type="text" class="form-control" aria-label="Sizing example input" ng-model="vm.data.seatMap"></textarea>
+        </div>
+        <button ng-click="vm.actions.createNewFlight()"
+            class="btn btn-primary">Create new flight</button>
     </div>
-    <hr />
-    <div class="row" ng-show="vm.data.viewFlightMode">
+    <div class="row" ng-show="vm.data.viewFlightMode && vm.data.isAuthenticated">
         <div class="plane col-md-auto">
             <div class="cockpit">
                 <h1>{{ vm.data.displayFlightNumber }}</h1>
