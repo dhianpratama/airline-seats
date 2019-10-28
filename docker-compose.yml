@@ -20,6 +20,27 @@ services:
       - redis:/data
     restart: always
 
+  backend:
+    build:
+      context: backend/.
+      dockerfile: docker/Dockerfile
+    container_name: backend
+    environment:
+      - "NODE_ENV=production"
+      - "MONGO_URL=mongodb://mongo:27017"
+      - "REDIS_HOST=redis"
+      - "REDIS_PORT=6379"
+    restart: always
+
+  frontend:
+    build:
+      context: frontend-angularjs/.
+      dockerfile: docker/Dockerfile
+    container_name: frontend
+    ports:
+      - 80:8080
+    restart: always
+
 volumes:
   mongo:
   redis:
