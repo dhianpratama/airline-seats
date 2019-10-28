@@ -11,7 +11,7 @@ import workerService from "./services/worker_service";
 import { logger } from "./utils/logger";
 
 class App {
-    constructor() {
+    constructor () {
         this.createHttpServer();
         this.startRsmqWorker();
     }
