@@ -1,0 +1,71 @@
+<div class="container">
+    <div class="row flight-selection">
+        <h2>Select flight</h2>
+        <div class="input-group">
+            <select ng-options="flight as flight.flight_number for flight in vm.data.flights track by flight.id" 
+                ng-model="vm.data.selectedFlight"
+                class="form-control">
+                <option value="">Select Flight</option>
+            </select>
+            <div class="input-group-btn">
+                <button ng-click="vm.actions.getFlightSeats()"
+                    class="btn btn-primary">View Flight Detail</button>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row" ng-show="vm.data.viewFlightMode">
+        <div class="plane col-md-auto">
+            <div class="cockpit">
+                <h1>{{ vm.data.displayFlightNumber }}</h1>
+            </div>
+            <div class="exit exit--front fuselage"></div>
+    
+            <div class="row">
+                <div ng-repeat="section in vm.data.seatsForDisplay" class="col-md-auto section">
+                    <div class="row" ng-repeat="row in section.rows">
+                        <div class="col seat" ng-repeat="seat in row.seats" ng-class="{ occupied: seat.is_occupied }">{{ seat.seat_name }}</div>
+                    </div>
+                </div>
+            </div>
+            
+    
+            <!-- <div class="row">
+                <div ng-repeat="section in vm.data.seatsForDisplay" class="col">
+                    <ol class="cabin fuselage">
+                        <li class="row row--{{$index+1}}" ng-repeat="row in section.rows">
+                            <ol class="seats" type="A">
+                                <li class="seat" ng-repeat="seat in row.seats">
+                                    <input type="checkbox" id="{{ seat.flight_number }}" />
+                                    <label for="{{ seat.flight_number }}">{{ seat.flight_number }}</label>
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </div>
+            </div> -->
+            
+            
+            <div class="exit exit--back fuselage">
+                
+            </div>
+        </div>
+        <div class="col guest-detail">
+            <div style="margin-bottom: 50px;">
+                <h3>Book a seat?</h3>
+                <input type="text" class="form-control" ng-model="vm.data.guestName" placeholder="Enter your name..." />
+                <br />
+                <button ng-click="vm.actions.bookSeat()" ng-disabled="vm.data.isWaitingForSeat"
+                        class="btn btn-primary" style="width: 100%;">Book</button>
+            </div>
+            <h5 ng-show="vm.data.isWaitingForSeat">Please wait. We are processing your booking.</h5>
+            <div ng-show="vm.data.requestDetail !== null && vm.data.isWaitingForSeat === false" >
+                <h4>Your booking successfully confirmed</h4>
+                <p><strong>Passenger Name:&nbsp;&nbsp;</strong>{{ vm.data.requestDetail.result[0].passenger }}</p>
+                <p><strong>Seat Number:&nbsp;&nbsp;</strong>{{ vm.data.requestDetail.result[0].seat_number }}</p>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>

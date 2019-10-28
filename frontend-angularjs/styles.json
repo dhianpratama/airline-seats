@@ -1,0 +1,4 @@
+[
+    "/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css",
+    "./src/**/*.scss"
+]

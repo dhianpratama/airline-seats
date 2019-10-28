@@ -38,3 +38,7 @@ This service consist of Http API and Worker Queue
 
 ![Flow](https://raw.githubusercontent.com/dhianpratama/airline-seats/master/diagrams/Airline%20Seats%20Placement.png)
 
+## TODO (for improvement)
+- Use RabbitMQ instead of Redis
+- Move worker to separate project/service
+- Each flight need to have it's own queue
