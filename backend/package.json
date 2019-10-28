@@ -7,7 +7,7 @@
     "start": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node src/app.ts",
     "build-ts": "tsc",
     "tslint": "tslint -c tslint.json -p tsconfig.json -t verbose",
-    "serve": "node dist/app.js",
+    "serve": "node dist/src/app.js",
     "build": "npm run tslint && npm run build-ts",
     "test": "mocha -r ts-node/register tests/*.test.ts"
   },
