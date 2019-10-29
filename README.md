@@ -25,8 +25,9 @@ npm run start
 ```
 
 ## How to run test
-Assume the app is already running at localhost:8080
+Automated test only available for backend
 ```
+cd backend
 npm run test
 ```
 

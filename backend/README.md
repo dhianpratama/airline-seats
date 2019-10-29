@@ -19,6 +19,23 @@ npm install
 npm run serve
 ```
 
+## How to run test
+```
+npm run test
+```
+Testing scopes
+```
+Admin Functionalities
+- Login
+- Create Flight consist of 36 seats
+- Admin book 50 passengers using bulk booking API (1 time api call)
+- Passenger 1 until 36 will get seats, 37 until 50 will have no seat.
+
+Concurrency Testing
+- Create flight consist of 36 seats
+- 100 guest are calling guest book API at the same time
+- Make sure only 36 passengers get seats
+```
 
 ## Environment variables
 
