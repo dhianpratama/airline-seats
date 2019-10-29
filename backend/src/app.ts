@@ -12,6 +12,7 @@ import { logger } from "./utils/logger";
 
 class App {
     constructor () {
+        console.log("CONFIG => ", config);
         this.createHttpServer();
         this.startRsmqWorker();
     }
