@@ -58,7 +58,10 @@ Response 200
 {
     "status": "success",
     "data": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ..."
+        "is_admin": true,
+        "phone_number": "628211112223",
+        "email": "admin@dummy.com",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey..."
     }
 }
 ```
