@@ -43,6 +43,7 @@
         </div>
         <button ng-click="vm.actions.createNewFlight()"
             class="btn btn-primary">Create new flight</button>
+        <hr />
     </div>
     <div class="row" ng-show="vm.data.viewFlightMode && vm.data.isAuthenticated">
         <div class="plane col-md-auto">
@@ -54,7 +55,10 @@
             <div class="row">
                 <div ng-repeat="section in vm.data.seatsForDisplay" class="col-md-auto section">
                     <div class="row" ng-repeat="row in section.rows">
-                        <div class="col seat" ng-repeat="seat in row.seats" ng-class="{ occupied: seat.is_occupied }">{{ seat.seat_name }}</div>
+                        <div class="col seat mytooltip" ng-repeat="seat in row.seats" ng-class="{ occupied: seat.is_occupied }">
+                            {{ seat.seat_name }}
+                            <span class="tooltiptext" ng-if="seat.is_occupied">{{seat.occupied_by}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,17 +86,38 @@
         </div>
         <div class="col guest-detail">
             <div style="margin-bottom: 50px;">
-                <h3>Book a seat?</h3>
-                <input type="text" class="form-control" ng-model="vm.data.guestName" placeholder="Enter your name..." />
+                <h3>Book for passengers?</h3>
+                <div class="input-group">
+                    <input type="number" class="form-control" ng-model="vm.data.totalPassengers" placeholder="Enter number of passengers..." />
+                    <div class="input-group-btn">
+                        <button ng-click="vm.actions.generatePassengers()"
+                            class="btn btn-primary">Generate</button>
+                    </div>
+                </div>
                 <br />
-                <button ng-click="vm.actions.bookSeat()" ng-disabled="vm.data.isWaitingForSeat"
+                <input type="text" class="form-control" ng-repeat="passenger in vm.data.listPassengers" ng-model="passenger" placeholder="Enter passenger name..." />
+                <br />
+                <button ng-click="vm.actions.bookSeatsInBulk()" ng-show="vm.data.listPassengers.length > 0" ng-disabled="vm.data.isWaitingForSeat"
                         class="btn btn-primary" style="width: 100%;">Book</button>
             </div>
             <h5 ng-show="vm.data.isWaitingForSeat">Please wait. We are processing your booking.</h5>
             <div ng-show="vm.data.requestDetail !== null && vm.data.isWaitingForSeat === false" >
                 <h4>Your booking successfully confirmed</h4>
-                <p><strong>Passenger Name:&nbsp;&nbsp;</strong>{{ vm.data.requestDetail.result[0].passenger }}</p>
-                <p><strong>Seat Number:&nbsp;&nbsp;</strong>{{ vm.data.requestDetail.result[0].seat_number }}</p>
+                <table class="table table-striped">
+                    <tr>
+                        <th>Passenger Name</th>
+                        <th>Seat Number</th>
+                        <th>Info</th>
+                    </tr>
+                    <tr ng-repeat="res in vm.data.requestDetail.result">
+                        <td>{{ res.passenger }}</td>
+                        <td>{{ res.seat_number }}</td>
+                        <td>{{ res.error_message }}</td>
+                    </tr>
+                </table>
+                
+                <!-- <p><strong>Passenger Name:&nbsp;&nbsp;</strong>{{ vm.data.requestDetail.result[0].passenger }}</p>
+                <p><strong>Seat Number:&nbsp;&nbsp;</strong>{{ vm.data.requestDetail.result[0].seat_number }}</p> -->
             </div>
             
         </div>

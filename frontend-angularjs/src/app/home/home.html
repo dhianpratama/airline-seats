@@ -24,7 +24,10 @@
             <div class="row">
                 <div ng-repeat="section in vm.data.seatsForDisplay" class="col-md-auto section">
                     <div class="row" ng-repeat="row in section.rows">
-                        <div class="col seat" ng-repeat="seat in row.seats" ng-class="{ occupied: seat.is_occupied }">{{ seat.seat_name }}</div>
+                        <div class="col seat mytooltip" ng-repeat="seat in row.seats" ng-class="{ occupied: seat.is_occupied }">
+                            {{ seat.seat_name }}
+                            <span class="tooltiptext" ng-if="seat.is_occupied">{{seat.occupied_by}}</span>
+                        </div>
                     </div>
                 </div>
             </div>

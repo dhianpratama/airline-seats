@@ -11,6 +11,7 @@
             getMe,
             login,
             createFlight,
+            bookSeatsInBulk,
             getFlights,
             getFlightSeats,
             bookSeat,
@@ -32,6 +33,14 @@
         function createFlight(data) {
             return apiService
                 .post('/admin/flights', data, true);
+        }
+
+        function bookSeatsInBulk(flightId, listPassengers) {
+            const data = {
+                passengers: listPassengers
+            };
+            return apiService
+                .post(`/admin/flights/${flightId}/seats/book/bulk`, data, true);
         }
 
         function getFlights() {

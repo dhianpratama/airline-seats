@@ -68,6 +68,15 @@
                         vm.data.seatMap = null;
                     });
             },
+            generatePassengers: () => {
+                if (!vm.data.totalPassengers || vm.data.totalPassengers === 0) {
+                    return alert("Invalid number of passengers");
+                }  
+                vm.data.listPassengers = [];
+                for (let i=1; i <= vm.data.totalPassengers; i++) {
+                    vm.data.listPassengers.push(`Passenger-${i}`);
+                }
+            },
             getFlights: () => {
                 adminService.getFlights()
                     .then(data => {
@@ -127,6 +136,17 @@
                         actions.poolingRequestDetail();
                     });
             },
+            bookSeatsInBulk: () => {
+                if (!vm.data.listPassengers || vm.data.listPassengers.length === 0) {
+                    return alert("List passengers are required")
+                }
+                vm.data.isWaitingForSeat = true;
+                adminService.bookSeatsInBulk(vm.data.selectedFlight.id, vm.data.listPassengers)
+                    .then(data => {
+                        vm.data.requestId = data.request_id;
+                        actions.poolingRequestDetail();
+                    });
+            },
             poolingRequestDetail: () => {
                 adminService.getRequestDetail(vm.data.requestId)
                     .then(data => {
@@ -163,14 +183,17 @@
             guestName: null,
             requestId: null,
             requestDetail: null,
-            isWaitingForSeat: false
+            isWaitingForSeat: false,
+            listPassengers: []
         }
 
         vm.actions = {
             getFlightSeats: actions.getFlightSeats,
             bookSeat: actions.bookSeat,
+            bookSeatsInBulk: actions.bookSeatsInBulk,
             login: actions.login,
-            createNewFlight: actions.createNewFlight
+            createNewFlight: actions.createNewFlight,
+            generatePassengers: actions.generatePassengers
         }
 
 
