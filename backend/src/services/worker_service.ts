@@ -19,13 +19,20 @@ class WorkerService {
         });
 
         worker.on("message", (message, next, id): void => {
-            console.log("Message id : " + id);
-            console.log("Message content: ", message);
+            logger.info(`WORKER => Consuming RequestID ${message}`);
+            // next();
             const seatRequestId = message;
             this.processSeatRequest(seatRequestId)
                 .subscribe(
-                    () => next(),
-                    (error: Error) => logger.error(`${error.stack}`),
+                    (seatRequest: ISeatRequestModel) => {
+                        logger.info(`WORKER => Successfully process RequestID ${message} :
+                            ${JSON.stringify(seatRequest)}
+                        `);
+                        next();
+                    },
+                    (error: Error) => logger.error(`WORKER => Error consuming RequestID ${message} :
+                        ${JSON.stringify(error.stack)}
+                    `),
                 );
         });
 
@@ -33,7 +40,7 @@ class WorkerService {
     }
 
     public processSeatRequest = (requestId: string): Observable<any> => {
-        return Observable.fromPromise(SeatRequest.findById(requestId))
+        return Observable.fromPromise(SeatRequest.findOne({ _id: requestId }).exec())
             .do((seatRequest: ISeatRequestModel) => {
                 if (!seatRequest) {
                     throw new Error("Seat request not found");

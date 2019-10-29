@@ -3,6 +3,7 @@ import { IListParams, IParamsAndUserSession, IValidationItem } from "../../inter
 import { ISeatRequestModel } from "../../models/seat_request";
 import queueService from "../../services/queue_service";
 import seatRequestService from "../../services/seat_request_service";
+import { logger } from "../../utils/logger";
 import { BaseHandler, Database } from "../base/base_handler";
 
 interface IBookSeatParams {
@@ -24,8 +25,12 @@ const bookSeatHandler = (requestObservable: Observable<Request>) => {
         .withDatabase(Database.MONGO)
         .withLogic((data: IParamsAndUserSession<IBookSeatParams>) => {
             const { params } = data;
+            logger.info(`REQUEST => Guest request to book a seat:
+                ${JSON.stringify(params)}
+            `);
             return seatRequestService.saveSeatRequest(params.username, params.flight_id)
                 .mergeMap((seatRequest: ISeatRequestModel) => queueService.publishToQueue(seatRequest._id.toString()), (seatRequest: ISeatRequestModel) => seatRequest)
+                .do((seatRequest: ISeatRequestModel) => logger.info(`RequestID ${seatRequest._id} successfully published to queue`))
                 .map((seatRequest: ISeatRequestModel) => ({ request_id: seatRequest._id }));
         })
         .withResponseData()

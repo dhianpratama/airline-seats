@@ -8,8 +8,11 @@ class QueueService {
         const rsmq = new RSMQPromise({ host: config.redisHost, port: config.redisPort });
         return Observable.fromPromise(rsmq.createQueue({ qname: SeatRequestQueueName }))
             .catch((error: Error) => {
-                console.error(error.message);
-                return Observable.of({});
+                if (error.message === "Queue exists") {
+                    return Observable.of({});
+                }
+
+                throw error;
             })
             .switchMap(() => Observable.of(rsmq));
     }

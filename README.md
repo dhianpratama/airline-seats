@@ -1,12 +1,14 @@
 Airline Seats Placement
 ============
 
-HTTP API to server auto generated seats placement based on this rules
+HTTP API to server auto generated seats placement based on these rules \n
+Try the demo here http://104.248.155.37
 ![Problems](https://raw.githubusercontent.com/dhianpratama/airline-seats/master/diagrams/problem.png)
 
 
 ## How to run server
 ### Production (recommended)
+Frontend will be served on port 80, backend will be served on port 8080
 ```
 docker-compose build
 docker-compose up -d

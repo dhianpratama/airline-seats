@@ -4,7 +4,7 @@ import { expect } from "chai";
 import "mocha";
 
 const BASE_API_URL = process.env.BASE_API_URL || "http://localhost:8080";
-const FLIGHT_NUMBER = "GA-919";
+const FLIGHT_NUMBER = "GA-919-TEST";
 const SEAT_MAP = [ [2, 3], [3, 4], [3, 2], [4, 3] ];
 const TOTAL_PASSENGERS = 50;
 const PASSENGERS = [];
@@ -155,6 +155,20 @@ describe("Running Test for ADMIN user", function () {
     });
 
     describe("Book Seats for Passengers", function () {
+        after(function () {
+            setTimeout(() => {
+                const options = {
+                    method: "DELETE",
+                    url: `${BASE_API_URL}/admin/flights/${FLIGHT_ID}`,
+                    headers: {
+                        Authorization: `Bearer ${AUTH_TOKEN}`,
+                    },
+                };
+                axios(options)
+                    .then(() => console.log(`Flight data ${FLIGHT_NUMBER} cleared.`))
+                    .catch((error) => console.error(error));
+            }, 3 * 1000);
+        });
         it("should throw error without authorization header", (done) => {
             const options = {
                 method: "POST",
@@ -204,7 +218,6 @@ describe("Running Test for ADMIN user", function () {
                     expect(status).to.equal("success");
                     expect(data).to.have.property("request_id");
                     REQUEST_ID = data.request_id;
-                    console.log("REQUEST ID ", REQUEST_ID);
                     done();
                 })
                 .catch((error) => done(error));
@@ -237,25 +250,42 @@ describe("Running Test for ADMIN user", function () {
                     if (res.passenger === "Passenger-1") { expect(res.seat_number).to.equal("1C"); }
                     if (res.passenger === "Passenger-2") { expect(res.seat_number).to.equal("1D"); }
                     if (res.passenger === "Passenger-3") { expect(res.seat_number).to.equal("1G"); }
+                    if (res.passenger === "Passenger-4") { expect(res.seat_number).to.equal("1H"); }
+                    if (res.passenger === "Passenger-5") { expect(res.seat_number).to.equal("1I"); }
+                    if (res.passenger === "Passenger-6") { expect(res.seat_number).to.equal("1J"); }
+                    if (res.passenger === "Passenger-7") { expect(res.seat_number).to.equal("2C"); }
+                    if (res.passenger === "Passenger-8") { expect(res.seat_number).to.equal("2D"); }
+                    if (res.passenger === "Passenger-9") { expect(res.seat_number).to.equal("2G"); }
+                    if (res.passenger === "Passenger-10") { expect(res.seat_number).to.equal("2H"); }
+                    if (res.passenger === "Passenger-11") { expect(res.seat_number).to.equal("2I"); }
+                    if (res.passenger === "Passenger-12") { expect(res.seat_number).to.equal("2J"); }
+                    if (res.passenger === "Passenger-13") { expect(res.seat_number).to.equal("3D"); }
+                    if (res.passenger === "Passenger-14") { expect(res.seat_number).to.equal("3G"); }
+                    if (res.passenger === "Passenger-15") { expect(res.seat_number).to.equal("3H"); }
+                    if (res.passenger === "Passenger-16") { expect(res.seat_number).to.equal("3I"); }
+                    if (res.passenger === "Passenger-17") { expect(res.seat_number).to.equal("3J"); }
+                    if (res.passenger === "Passenger-18") { expect(res.seat_number).to.equal("4J"); }
+                    if (res.passenger === "Passenger-19") { expect(res.seat_number).to.equal("1A"); }
+                    if (res.passenger === "Passenger-20") { expect(res.seat_number).to.equal("1L"); }
+                    if (res.passenger === "Passenger-21") { expect(res.seat_number).to.equal("2A"); }
+                    if (res.passenger === "Passenger-22") { expect(res.seat_number).to.equal("2L"); }
+                    if (res.passenger === "Passenger-23") { expect(res.seat_number).to.equal("3L"); }
+                    if (res.passenger === "Passenger-24") { expect(res.seat_number).to.equal("4L"); }
+                    if (res.passenger === "Passenger-25") { expect(res.seat_number).to.equal("1B"); }
+                    if (res.passenger === "Passenger-26") { expect(res.seat_number).to.equal("1E"); }
+                    if (res.passenger === "Passenger-27") { expect(res.seat_number).to.equal("1F"); }
+                    if (res.passenger === "Passenger-28") { expect(res.seat_number).to.equal("1K"); }
+                    if (res.passenger === "Passenger-29") { expect(res.seat_number).to.equal("2B"); }
+                    if (res.passenger === "Passenger-30") { expect(res.seat_number).to.equal("2E"); }
+                    if (res.passenger === "Passenger-31") { expect(res.seat_number).to.equal("2F"); }
+                    if (res.passenger === "Passenger-32") { expect(res.seat_number).to.equal("2K"); }
+                    if (res.passenger === "Passenger-33") { expect(res.seat_number).to.equal("3E"); }
+                    if (res.passenger === "Passenger-34") { expect(res.seat_number).to.equal("3F"); }
+                    if (res.passenger === "Passenger-35") { expect(res.seat_number).to.equal("3K"); }
+                    if (res.passenger === "Passenger-36") { expect(res.seat_number).to.equal("4K"); }
                 });
                 done();
             });
-        });
-        it("should delete all data related to this flight", (done) => {
-            const options = {
-                method: "DELETE",
-                url: `${BASE_API_URL}/admin/flights/${FLIGHT_ID}`,
-                headers: {
-                    Authorization: `Bearer ${AUTH_TOKEN}`,
-                },
-            };
-            axios(options)
-                .then((response) => {
-                    const { status } = response.data;
-                    expect(status).to.equal("success");
-                    done();
-                })
-                .catch((error) => done(error));
         });
     });
 });
