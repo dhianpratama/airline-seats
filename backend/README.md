@@ -52,6 +52,13 @@ Concurrency Testing
 Login for admin. Only have one account
 username = admin
 password = pass1234
+```
+Request Body
+{
+	"username": "admin",
+	"password": "pass1234"
+}
+```
 
 ```
 Response 200
