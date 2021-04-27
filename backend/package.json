@@ -55,7 +55,7 @@
     "mongoose": "^5.5.10",
     "mqtt": "^3.0.0",
     "node-graceful": "^0.3.1",
-    "redis": "^2.8.0",
+    "redis": "^3.1.1",
     "reflect-metadata": "^0.1.13",
     "rsmq": "^0.11.0",
     "rsmq-promise": "^1.0.4",
